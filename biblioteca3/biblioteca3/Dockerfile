@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jdk AS build
+FROM eclipse-temurin:25-jdk AS build
 WORKDIR /workspace
 
 RUN apt-get update \
@@ -13,7 +13,7 @@ RUN chmod +x mvnw
 COPY src ./src
 RUN ./mvnw -B package -DskipTests
 
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:25-jre
 WORKDIR /app
 COPY --from=build /workspace/target/*.jar /app/app.jar
 EXPOSE 8080
