@@ -1,0 +1,19 @@
+services:
+  - name: biblioteca-app
+    type: web
+    env: docker
+    branch: main
+    autoDeploy: true
+    dockerfilePath: Dockerfile
+    plan: free
+    # healthCheckPath: "/actuator/health"  # Descomenta si tu app expone el endpoint de health
+
+databases:
+  - name: biblioteca-db
+    engine: mysql
+    version: "8"
+    plan: free
+    user: biblioteca_user
+    password: biblioteca_pass
+    database: db_biblioteca
+    allowPublicAccess: true

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Biblioteca - Sistema de Gestión</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- LOGIN VIEW -->
+<section id="loginView" class="view login-view">
+    <div class="login-form-container">
+        <h2 class="text-center mb-4">🏛️ Sistema de Biblioteca</h2>
+        <form id="loginForm">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input id="email" type="email" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input id="password" type="password" class="form-control" required />
+            </div>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                <button type="button" onclick="mostrarRegistro()" class="btn btn-outline-secondary">Registrarse</button>
+            </div>
+        </form>
+        <div class="alert alert-info mt-3" style="font-size: 13px;">
+            <strong>Usuarios de prueba:</strong><br>
+            Admin: admin@biblioteca.com / admin123<br>
+            Usuario: usuario@biblioteca.com / usuario123
+        </div>
+    </div>
+</section>
+
+<!-- REGISTRO VIEW -->
+<section id="registroView" class="view registro-view" style="display:none;">
+    <div class="login-form-container">
+        <h2 class="text-center mb-4">Registro de Usuario</h2>
+        <form id="registroForm">
+            <div class="mb-2">
+                <input id="nombre" class="form-control" placeholder="Nombre" required />
+            </div>
+            <div class="mb-2">
+                <input id="apellido" class="form-control" placeholder="Apellido" required />
+            </div>
+            <div class="mb-2">
+                <input id="cedula" class="form-control" placeholder="Cédula" required />
+            </div>
+            <div class="mb-2">
+                <input id="telefono" class="form-control" placeholder="Teléfono" required />
+            </div>
+            <div class="mb-2">
+                <input id="emailReg" type="email" class="form-control" placeholder="Email" required />
+            </div>
+            <div class="mb-3">
+                <input id="claveReg" type="password" class="form-control" placeholder="Contraseña" required />
+            </div>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Registrarse</button>
+                <button type="button" onclick="mostrarLogin()" class="btn btn-outline-secondary">Volver al Login</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- DASHBOARD VIEW -->
+<section id="dashboardView" style="display:none;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">📚 Biblioteca Digital</a>
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <span id="usuarioNombre" class="text-white"></span>
+                <span id="rolBadge" class="badge bg-info"></span>
+                <button onclick="cerrarSesion()" class="btn btn-danger btn-sm">Cerrar Sesión</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- SIDEBAR -->
+            <aside class="col-md-3 col-lg-2 bg-light border-end p-3">
+                <div class="list-group">
+                    <button class="list-group-item list-group-item-action active" data-tab="catalogo">
+                        📖 Catálogo
+                    </button>
+                    <button class="list-group-item list-group-item-action" data-tab="prestamos">
+                        📋 Mis Préstamos
+                    </button>
+                    <button id="btnAdminTab" class="list-group-item list-group-item-action" data-tab="admin" style="display:none;">
+                        ⚙️ Administración
+                    </button>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <main class="col-md-9 col-lg-10 p-4">
+                
+                <!-- TAB: CATÁLOGO -->
+                <div id="catalogoTab" class="tab-content active">
+                    <h3 class="mb-4">Catálogo de Libros</h3>
+                    <div id="librosList" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3"></div>
+                </div>
+
+                <!-- TAB: MIS PRÉSTAMOS -->
+                <div id="prestamosTab" class="tab-content" style="display:none;">
+                    <h3 class="mb-4">Mis Préstamos Activos</h3>
+                    <div id="prestamosList"></div>
+                </div>
+
+                <!-- TAB: ADMINISTRACIÓN -->
+                <div id="adminTab" class="tab-content" style="display:none;">
+                    <h3 class="mb-4">Panel de Administración</h3>
+                    
+                    <!-- Sub-tabs de administración -->
+                    <ul class="nav nav-tabs mb-4">
+                        <li class="nav-item">
+                            <button class="nav-link active" onclick="cambiarSubTab('prestamosAdmin', this)">
+                                Todos los Préstamos
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" onclick="cambiarSubTab('registrarLibro', this)">
+                                Registrar Libro
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- SUBTAB: TODOS LOS PRÉSTAMOS -->
+                    <div id="prestamosAdmin" class="subtab-content active">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Todos los Préstamos del Sistema</h5>
+                                <div id="todosPrestamosList"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SUBTAB: REGISTRAR LIBRO -->
+                    <div id="registrarLibro" class="subtab-content" style="display:none;">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Registrar Nuevo Libro</h5>
+                                <form id="libroForm" class="row g-3 mt-2">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Título</label>
+                                        <input id="tituloLibro" class="form-control" required />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Autor</label>
+                                        <input id="autorLibro" class="form-control" required />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">ISBN</label>
+                                        <input id="isbnLibro" class="form-control" required />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Categoría</label>
+                                        <input id="categoriaLibro" class="form-control" required />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Cantidad</label>
+                                        <input id="cantidadLibro" type="number" min="1" value="1" class="form-control" required />
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Descripción</label>
+                                        <textarea id="descripcionLibro" class="form-control" rows="3"></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-success">Registrar Libro</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </main>
+        </div>
+    </div>
+</section>
+
+<script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
