@@ -1,18 +1,16 @@
 services:
-  - name: biblioteca-app
-    type: web
+  - type: web
+    name: biblioteca3
     env: docker
-    branch: main
-    autoDeploy: true
-    dockerfilePath: Dockerfile
-    plan: free
-    # healthCheckPath: "/actuator/health"  # Descomenta si tu app expone el endpoint de health
+    dockerfilePath: biblioteca3/Dockerfile
+    buildCommand: ./mvnw clean install
+    startCommand: java -jar target/biblioteca3.jar
 
 databases:
   - name: biblioteca-db
     engine: mysql
     version: "8"
-    plan: free
+    plan: freex
     user: biblioteca_user
     password: biblioteca_pass
     database: db_biblioteca
