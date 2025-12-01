@@ -1,4 +1,3 @@
-// script.js — Código corregido sin bugs de pestañas
 const API_URL = 'https://pruevamysql.onrender.com';
 
 let usuarioActual = null;
@@ -129,7 +128,7 @@ if (loginForm) {
         const password = document.getElementById('password').value;
 
         try {
-            const response = await fetch(`${API_URL}/usuarios/login`, {
+            const response = await fetch(`${API_URL}/api/usuarios/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, clave: password })
@@ -170,7 +169,7 @@ if (registroForm) {
         };
 
         try {
-            const response = await fetch(`${API_URL}/usuarios/registro`, {
+            const response = await fetch(`${API_URL}/api/usuarios/registro`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(usuario)
@@ -199,7 +198,7 @@ async function cargarLibros() {
     librosList.innerHTML = '<div class="col-12"><div class="loader"></div></div>';
 
     try {
-        const response = await fetch(`${API_URL}/libros`);
+        const response = await fetch(`${API_URL}/api/libros`);
         const data = await response.json();
         librosList.innerHTML = '';
 
@@ -245,7 +244,7 @@ async function cargarPrestamos() {
     prestamosList.innerHTML = '<div class="loader"></div>';
 
     try {
-        const response = await fetch(`${API_URL}/prestamos/usuario/${usuarioActual.id}`);
+        const response = await fetch(`${API_URL}/api/prestamos/usuario/${usuarioActual.id}`);
         const data = await response.json();
         prestamosList.innerHTML = '';
 
@@ -289,7 +288,7 @@ async function cargarTodosPrestamos() {
     todosPrestamosList.innerHTML = '<div class="loader"></div>';
 
     try {
-        const response = await fetch(`${API_URL}/prestamos?usuarioId=${usuarioActual.id}`);
+        const response = await fetch(`${API_URL}/api/prestamos?usuarioId=${usuarioActual.id}`);
         const data = await response.json();
         todosPrestamosList.innerHTML = '';
 
@@ -335,7 +334,7 @@ async function realizarPrestamo(libroId) {
     }
 
     try {
-        const response = await fetch(`${API_URL}/prestamos`, {
+        const response = await fetch(`${API_URL}/api/prestamos`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
@@ -364,7 +363,7 @@ async function devolverPrestamo(prestamoId) {
     if (!confirm('¿Confirmar devolución del libro?')) return;
 
     try {
-        const response = await fetch(`${API_URL}/prestamos/${prestamoId}/devolver?usuarioId=${usuarioActual.id}`, {
+        const response = await fetch(`${API_URL}/api/prestamos/${prestamoId}/devolver?usuarioId=${usuarioActual.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' }
         });
@@ -407,7 +406,7 @@ if (libroForm) {
         };
 
         try {
-            const response = await fetch(`${API_URL}/libros?usuarioId=${usuarioActual.id}`, {
+            const response = await fetch(`${API_URL}/api/libros?usuarioId=${usuarioActual.id}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(libro)
