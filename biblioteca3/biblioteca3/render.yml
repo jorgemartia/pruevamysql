@@ -5,7 +5,8 @@ services:
     dockerfilePath:  biblioteca3/biblioteca3/Dockerfile
 
     buildCommand: ./mvnw clean install
-    startCommand: java -jar target/biblioteca3.jar
+    startCommand: java -jar app.jar
+
 
 databases:
   - name: biblioteca-db
