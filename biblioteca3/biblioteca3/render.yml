@@ -2,7 +2,8 @@ services:
   - type: web
     name: biblioteca3
     env: docker
-    dockerfilePath: biblioteca3/Dockerfile
+    dockerfilePath:  biblioteca3/biblioteca3/Dockerfile
+
     buildCommand: ./mvnw clean install
     startCommand: java -jar target/biblioteca3.jar
 
