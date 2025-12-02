@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import proyecto.biblioteca3.repository.PrestamoRepository;
 import proyecto.biblioteca3.dto.*;
+import proyecto.biblioteca3.validador.*;    
 import proyecto.biblioteca3.model.*;
 import proyecto.biblioteca3.service.*;
 import proyecto.biblioteca3.command.*;
@@ -27,6 +28,7 @@ public class PrestamoController {
         private final LibroService libroService;
         private final ProxyService proxyService;
         private final DevolucionCommand devolucionCommand;
+        private final ValidadorPrestamos validadorPrestamos;
 
         @GetMapping
         public ResponseEntity<ApiResponse<List<Prestamo>>> listar(@RequestParam Integer usuarioId) {
@@ -54,6 +56,11 @@ public class PrestamoController {
 
                         Libro libro = libroService.obtenerPorId(req.getLibroId())
                                         .orElseThrow(() -> new RuntimeException("Libro no encontrado"));
+
+                                                             
+                        validadorPrestamos.validarPrestamoUnico(req.getUsuarioId(), req.getLibroId());
+                        
+                        validadorPrestamos.validarLimitePrestamos(req.getUsuarioId(), 3);
 
                         if (libro.getCantidadDisponible() <= 0) {
                                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -105,7 +112,7 @@ public class PrestamoController {
                         if (prestamo == null) {
                                 return ResponseEntity.notFound().build();
                         }
-
+                        validadorPrestamos.validarDevolucion(prestamo);
                         // Validar permisos
                         if (!usuario.getRol().equals(Usuario.RolUsuario.ADMIN) &&
                                         !prestamo.getUsuario().getId().equals(usuarioId)) {

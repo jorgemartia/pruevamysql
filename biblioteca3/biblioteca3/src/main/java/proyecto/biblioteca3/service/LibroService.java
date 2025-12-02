@@ -14,6 +14,7 @@ import java.util.Optional;
 public class LibroService {
     private final LibroRepository libroRepository;
     
+    @SuppressWarnings("UseSpecificCatch")
     public Libro guardar(Libro libro) {
         try {
             // Validaciones básicas

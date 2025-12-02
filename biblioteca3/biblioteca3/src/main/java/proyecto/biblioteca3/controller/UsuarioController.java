@@ -20,6 +20,7 @@ public class UsuarioController {
 
 
     @PostMapping("/registro")
+    @SuppressWarnings("CallToPrintStackTrace")
     public ResponseEntity<ApiResponse<Usuario>> registrar(@RequestBody RegistroRequest request) {
         try {
             System.out.println("=== DEBUG REGISTRO ===");
