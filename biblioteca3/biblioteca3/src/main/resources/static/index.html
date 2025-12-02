@@ -133,7 +133,12 @@
                     <div id="prestamosAdmin" class="subtab-content active">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Todos los Préstamos del Sistema</h5>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="card-title mb-0">Todos los Préstamos del Sistema</h5>
+                                    <button onclick="limpiarPrestamosDevueltos()" class="btn btn-warning btn-sm">
+                                        🗑️ Limpiar Devueltos
+                                    </button>
+                                </div>
                                 <div id="todosPrestamosList"></div>
                             </div>
                         </div>

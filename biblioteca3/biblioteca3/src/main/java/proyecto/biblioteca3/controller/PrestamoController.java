@@ -32,6 +32,7 @@ public class PrestamoController {
         private final ValidadorPrestamos validadorPrestamos;  // TU VALIDADOR ORIGINAL
         private final ValidacionUsuario validadorUsuarios;
         private final ValidacionLibro validadorLibros;
+        private final ValidacionPermiso validadorPermiso;
         
 
         @GetMapping
@@ -194,6 +195,36 @@ public class PrestamoController {
                                         .body(ApiResponse.<List<Prestamo>>builder()
                                                         .exito(false)
                                                         .mensaje(e.getMessage())
+                                                        .build());
+                }
+        }
+        @DeleteMapping("/limpiar-devueltos")
+        public ResponseEntity<ApiResponse<Integer>> limpiarDevueltos(@RequestParam Integer usuarioId) {
+                try {
+                        Usuario usuario = validadorUsuarios.validarExiste(usuarioId);
+                        validadorPermiso.validarGestionLibros(usuario);
+
+                        List<Prestamo> prestamosDevueltos = prestamoRepository.findByEstado(Prestamo.EstadoPrestamo.DEVUELTO);
+                        int cantidad = prestamosDevueltos.size();
+                        
+                        prestamoRepository.deleteAll(prestamosDevueltos);
+
+                        return ResponseEntity.ok(ApiResponse.<Integer>builder()
+                                        .exito(true)
+                                        .mensaje("Se eliminaron " + cantidad + " préstamos devueltos")
+                                        .datos(cantidad)
+                                        .build());
+                } catch (IllegalArgumentException | IllegalStateException e) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                        .body(ApiResponse.<Integer>builder()
+                                                        .exito(false)
+                                                        .mensaje(e.getMessage())
+                                                        .build());
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body(ApiResponse.<Integer>builder()
+                                                        .exito(false)
+                                                        .mensaje("Error al limpiar préstamos: " + e.getMessage())
                                                         .build());
                 }
         }

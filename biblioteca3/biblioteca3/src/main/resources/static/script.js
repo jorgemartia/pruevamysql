@@ -427,6 +427,36 @@ if (libroForm) {
     });
 }
 
+// ===== LIMPIAR PRÉSTAMOS DEVUELTOS =====
+async function limpiarPrestamosDevueltos() {
+    if (!usuarioActual || usuarioActual.rol !== 'ADMIN') {
+        alert('No tienes permisos para esta acción');
+        return;
+    }
+
+    if (!confirm('⚠️ ¿Estás seguro de que deseas eliminar todos los préstamos con estado DEVUELTO? Esta acción no se puede deshacer.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/api/prestamos/limpiar-devueltos?usuarioId=${usuarioActual.id}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+        if (response.ok && data.exito) {
+            alert(`✅ ${data.mensaje}`);
+            cargarTodosPrestamos();
+        } else {
+            alert('❌ ' + (data.mensaje || 'Error al limpiar préstamos'));
+        }
+    } catch (error) {
+        console.error('Error limpiar préstamos:', error);
+        alert('Error al limpiar préstamos devueltos');
+    }
+}
+
 // ===== CERRAR SESIÓN =====
 function cerrarSesion() {
     usuarioActual = null;
