@@ -1,11 +1,11 @@
 package proyecto.biblioteca3.validador;
 
+
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import proyecto.biblioteca3.model.Prestamo;
 import proyecto.biblioteca3.repository.PrestamoRepository;
-
-import java.util.List;
 
 /**
  * Validador de reglas de negocio para préstamos
@@ -69,6 +69,31 @@ public class ValidadorPrestamos {
     public void validarDevolucion(Prestamo prestamo) {
         if (prestamo.getEstado() == Prestamo.EstadoPrestamo.DEVUELTO) {
             throw new IllegalStateException("Este préstamo ya fue devuelto anteriormente");
+        }
+    }
+    
+    /**
+     * Valida que el préstamo exista en el sistema
+     */
+    public Prestamo validarExiste(Integer prestamoId) {
+        return prestamoRepository.findById(prestamoId)
+            .orElseThrow(() -> new IllegalArgumentException("Préstamo no encontrado"));
+    }
+    
+    /**
+     * Valida que el préstamo tenga todos los datos necesarios
+     */
+    public void validarCompleto(Prestamo prestamo) {
+        if (prestamo == null) {
+            throw new IllegalArgumentException("El préstamo no puede ser nulo");
+        }
+        
+        if (prestamo.getUsuario() == null || prestamo.getUsuario().getId() == null) {
+            throw new IllegalArgumentException("El préstamo debe tener un usuario válido");
+        }
+        
+        if (prestamo.getLibro() == null || prestamo.getLibro().getId() == null) {
+            throw new IllegalArgumentException("El préstamo debe tener un libro válido");
         }
     }
 }
